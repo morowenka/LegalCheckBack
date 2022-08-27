@@ -74,6 +74,37 @@ def get_one_article(name):
     except Exception as e:
         return dumps({'error' : str(e)})
 
+@app.route("/get_one_article_result/<name>", methods = ['GET'])
+def get_one_article_result(name):
+    try:
+        x = db['articles'].find_one({"name": name})
+        result = model.process_text(os.path.join('files', f'{x["filename"]}.docx'))
+        return json.dumps(result, cls=NumpyEncoder)
+        # return dumps(x)
+    except Exception as e:
+        return dumps({'error' : str(e)})
+
+
+@app.route("/get_all_articles_result", methods = ['GET'])
+def get_all_articles_result():
+    try:
+        articles = db['articles'].find()
+        r = []
+        for article in articles:
+            result = model.process_text(os.path.join('files', f'{article["filename"]}.docx'))
+            r.append(result)
+        return json.dumps(result, cls=NumpyEncoder)
+    except Exception as e:
+        return dumps({'error' : str(e)})
+
+@app.route("/clean_bd", methods = ['DELETE'])
+def clean():
+    try:
+        db.articles.drop()
+        return dumps({'message' : 'succes'})
+    except Exception as e:
+        return dumps({'error' : str(e)})
+
 
 if __name__ == "__main__":
 
