@@ -1,2 +1,13 @@
 pymongo
 flask
+nltk
+bs4
+pymorphy2
+torch
+pickle-mixin
+regex
+spacy
+pandas
+numpy
+bson
+docx2txt
