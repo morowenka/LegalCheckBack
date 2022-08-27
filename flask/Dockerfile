@@ -1,8 +1,16 @@
 # syntax=docker/dockerfile:1.4
 FROM --platform=$BUILDPLATFORM python:3.10-alpine AS builder
+#FROM python:latest
 
 WORKDIR /src
 COPY requirements.txt /src
+RUN apk update && \
+    apk add build-base
+
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip3 install --upgrade pip
+RUN --mount=type=cache,target=/root/.cache/pip  \
+    pip3 -v install torch==1.11.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip3 install -r requirements.txt
 

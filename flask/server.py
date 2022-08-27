@@ -36,7 +36,6 @@ def insert():
        # )
        # return dumps({'message': 'SUCCESS'})
        result = model.process_text(article)
-       print(result)
        return dumps(result)
     except Exception as e:
        return dumps({'error': str(e)})
