@@ -84,4 +84,4 @@ class Model():
             doc_metrics += X_classes.detach().numpy()[0]
         doc_metrics /= rows_count
 
-        return rows_all_classes_data
+        return list(zip(data.text, rows_all_classes_data))
