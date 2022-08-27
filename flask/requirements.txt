@@ -7,4 +7,5 @@ pickle-mixin
 regex
 pandas
 numpy
+lxml
 docx2txt

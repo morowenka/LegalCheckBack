@@ -29,7 +29,7 @@ def insert():
     article = request.files['article']
     name = request.form['name']
     filename = str(uuid.uuid4())
-    article.save(f'{filename}.docx')
+    article.save(os.path.join('files', f'{filename}.docx'))
     # try:
     db.articles.insert_one(
           {
@@ -37,8 +37,8 @@ def insert():
                 'filename':filename,
           }
     )
-    result = model.process_text(filename)
-    return dumps(result.to_list())
+    result = model.process_text(os.path.join('files', f'{filename}.docx'))
+    return str(result)
     # except Exception as e:
     #    return dumps([{'error': str(e)}])
 

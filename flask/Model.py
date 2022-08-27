@@ -36,7 +36,7 @@ class Model():
     def init_data(self, filename,  root='.'):
 
         df = pd.DataFrame(columns=['text', 'label'])
-        for row in docx2txt.process(f'{filename}.docx').split('{')[1::2]:
+        for row in docx2txt.process(filename).split('{')[1::2]:
             row_data = row.split('}')
             npa_label = row_data[0]
             try:
