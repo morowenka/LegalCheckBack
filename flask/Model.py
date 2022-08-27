@@ -11,13 +11,23 @@ import numpy as np
 import pandas as pd
 import os
 
+from  mlp_model import MLPModel
+
+class CustomUnpickler(pickle.Unpickler):
+
+    def find_class(self, module, name):
+        if name == 'MLPModel':
+            from mlp_model import MLPModel
+            return MLPModel
+        return super().find_class(module, name)
+
 
 class Model():
-
     def __init__(self):
         nltk.download('stopwords')
         self.STOPWORDS = set(stopwords.words('russian'))
-        self.model = pickle.load(open("model.p", "rb"))
+        self.model = MLPModel(300, 39)
+        self.model = CustomUnpickler(open("model.p", "rb")).load()
         self.tokenizer = RegexpTokenizer(r'\w+')
         self.lemmatizer = pymorphy2.MorphAnalyzer()
         self.vectorizer = pickle.load(open("vectorizer.p", "rb"))

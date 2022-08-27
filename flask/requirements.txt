@@ -9,5 +9,5 @@ regex
 spacy
 pandas
 numpy
-bson
 docx2txt
+scikit-learn

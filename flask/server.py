@@ -5,11 +5,16 @@ from flask import Flask, request
 from pymongo import MongoClient
 from bson.json_util import dumps
 from  Model import Model
+import torch
+
+
 app = Flask(__name__)
 
 client = MongoClient("mongo:27017")
 db = client.ArticleDB
-# model = Model()
+model = Model()
+
+
 
 @app.route('/', methods = ['GET'])
 def todo():
@@ -23,16 +28,16 @@ def todo():
 @app.route("/insert_article",methods=['POST'])
 def insert():
     article = request.form.get('article')
-
     try:
-       db.articles.insert_one(
-              {
-                     'article': article,
-              }
-       )
-       return dumps({'message': 'SUCCESS'})
+       # db.articles.insert_one(
+       #        {
+       #               'article': article,
+       #        }
+       # )
+       # return dumps({'message': 'SUCCESS'})
        result = model.process_text(article)
-       # return dumps(result)
+       print(result)
+       return dumps(result)
     except Exception as e:
        return dumps({'error': str(e)})
 
