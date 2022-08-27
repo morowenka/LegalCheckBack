@@ -1,5 +1,5 @@
-import docx2txt
 import nltk
+import docx2txt
 from nltk.corpus import stopwords
 from bs4 import BeautifulSoup
 from nltk.tokenize import RegexpTokenizer
@@ -9,7 +9,7 @@ import pickle
 import re
 import numpy as np
 import pandas as pd
-import os
+
 
 from  mlp_model import MLPModel
 
@@ -33,9 +33,10 @@ class Model():
         self.vectorizer = pickle.load(open("vectorizer.p", "rb"))
         self.selector = pickle.load(open("selector.p", "rb"))
 
-    def init_data(self, input, root=''):
+    def init_data(self, filename,  root='.'):
+
         df = pd.DataFrame(columns=['text', 'label'])
-        for row in docx2txt.process(os.path.join(root, 'input.docx')).split('{')[1::2]:
+        for row in docx2txt.process(f'{filename}.docx').split('{')[1::2]:
             row_data = row.split('}')
             npa_label = row_data[0]
             try:
@@ -64,8 +65,8 @@ class Model():
         tokens = self.lemmatizing(tokens)
         return self.delete_stopwords(tokens)
 
-    def process_text(self, data):
-        data = self.init_data(data)
+    def process_text(self, name):
+        data = self.init_data(name)
         data.text = data.text.apply(self.clean_data)
         rows_count = data.shape[0]
         doc_metrics = np.zeros(39)
