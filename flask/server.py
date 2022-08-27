@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os
 
-from flask import Flask, request
+from flask import Flask, request, send_file
 from pymongo import MongoClient
 from bson.json_util import dumps
 from  Model import Model
@@ -12,6 +12,19 @@ app = Flask(__name__)
 client = MongoClient("mongo:27017")
 db = client.ArticleDB
 model = Model()
+import json
+import numpy as np
+
+class NumpyEncoder(json.JSONEncoder):
+    """ Special json encoder for numpy types """
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return json.JSONEncoder.default(self, obj)
 
 
 @app.route('/', methods = ['GET'])
@@ -38,7 +51,7 @@ def insert():
           }
     )
     result = model.process_text(os.path.join('files', f'{filename}.docx'))
-    return str(result)
+    return json.dumps(result, cls=NumpyEncoder)
     # except Exception as e:
     #    return dumps([{'error': str(e)}])
 
@@ -56,8 +69,8 @@ def get_all_articles():
 def get_one_article(name):
     try:
         x = db['articles'].find_one({"name": name})
-
-        return dumps(x)
+        return send_file(os.path.join(os.getcwd(), 'files', f'{x["filename"]}.docx'))
+        # return dumps(x)
     except Exception as e:
         return dumps({'error' : str(e)})
 
