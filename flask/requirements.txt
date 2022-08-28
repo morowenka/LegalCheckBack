@@ -11,3 +11,4 @@ lxml
 docx2txt
 docx2pdf
 pdf2image
+flask-cors
