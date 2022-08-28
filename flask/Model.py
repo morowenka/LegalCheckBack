@@ -67,6 +67,7 @@ class Model():
 
     def process_text(self, name):
         data = self.init_data(name)
+        paragraphs = data.text.copy()
         data.text = data.text.apply(self.clean_data)
         rows_count = data.shape[0]
         doc_metrics = np.zeros(39)
@@ -84,4 +85,4 @@ class Model():
             doc_metrics += X_classes.detach().numpy()[0]
         doc_metrics /= rows_count
 
-        return list(zip(data.text, rows_all_classes_data))
+        return list(zip(paragraphs, rows_all_classes_data))
